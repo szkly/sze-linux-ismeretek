@@ -1,0 +1,1 @@
+# IaC-alapú rendszer (SZE - Linux ismeretek beadandó)
