@@ -1,0 +1,7 @@
+- name: Setup node
+  hosts: do-node
+  gather_facts: false
+  roles:
+    - system
+    - docker
+    - grafana
