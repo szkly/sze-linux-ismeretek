@@ -1,2 +1,3 @@
 ---
-# tasks file for applications
+- name: Generate and run 'applications' stack
+  ansible.builtin.import_tasks: docker.yml

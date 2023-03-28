@@ -1,0 +1,16 @@
+---
+- name: Create 'applications' directory
+  ansible.builtin.file:
+    path: "{{ lookup('env', 'HOME') }}/applications"
+    mode: 0644
+    state: directory
+
+- name: Generate Docker Compose manifest from template
+  ansible.builtin.template:
+    src: docker-compose.yml.j2
+    dest: "{{ lookup('env', 'HOME') }}/applications/docker-compose.yml"
+    mode: 0644
+
+- name: Start 'applications' stack
+  community.docker.docker_compose:
+    project_src: "{{ lookup('env', 'HOME') }}/applications"
