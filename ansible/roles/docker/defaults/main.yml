@@ -6,6 +6,9 @@ docker_packages_prequisites:
 
 docker_keyrings_dir: "/etc/apt/keyrings"
 
+docker_gpg_key_download_url: "https://download.docker.com/linux/ubuntu/gpg"
+docker_gpg_key_id: "0EBFCD88"
+
 docker_packages_core:
   - "docker-ce"
   - "docker-ce-cli"
