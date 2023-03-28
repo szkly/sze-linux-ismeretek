@@ -1,14 +1,13 @@
 version: "3"
 services:
-  {% if containers_reverse_proxy %}
+  {% if applications_traefik %}
   traefik:
-    image: traefik:v2.9 # TODO: Replace .env file
+    image: traefik:{{ applications_traefik_image_version }}
     container_name: traefik
     ports:
       - 443:443
-      - 8080:8080
+      - {{ applications_traefik_external_port_webui }}:8080
     command:
-      #- "--log.level=DEBUG"
       - "--api.insecure=true"
       - "--providers.docker=true"
       - "--providers.docker.exposedbydefault=false"
@@ -17,24 +16,24 @@ services:
       - "--certificatesresolvers.customresolver.acme.email={{ applications_traefik_acme_email }}"
       - "--certificatesresolvers.customresolver.acme.storage=/letsencrypt/acme.json"
     volumes:
-      - "./letsencrypt:/letsencrypt"
-      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+      - "{{ applications_data_directory }}/letsencrypt:/letsencrypt"
+      - /var/run/docker.sock:/var/run/docker.sock:ro
     networks:
       - public
       - internal
     restart: always
   {% endif %}
 
-  {% if containers_app %}
+  {% if applications_node_app %}
   sze-linux-node-app:
-    image: ghcr.io/szkly/sze-linux-node-app:1.0.1
+    image: ghcr.io/szkly/sze-linux-node-app:{{ applications_node_app_image_version }}
     container_name: sze-linux-node-app
     ports:
-      - 3000:3000
+      - {{ applications_node_app_external_port }}:3000
     user: 1000:1000
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.app.rule=Host(`app.overlab.hu`)"
+      - "traefik.http.routers.app.rule=Host(`{{ applications_node_app_subdomain }}.{{ applications_domain }}`)"
       - "traefik.http.routers.app.entrypoints=websecure"
       - "traefik.http.routers.app.tls.certresolver=customresolver"
     networks:
@@ -42,19 +41,24 @@ services:
     restart: unless-stopped
   {% endif %}
 
-  {% if containers_monitoring_stack %}
+  {% if applications_monitoring_stack %}
   grafana:
-    image: grafana/grafana
+    image: grafana/grafana:{{ applications_grafana_image_version }}
     container_name: grafana-server
     ports:
-      - 8000:3000
+      - {{ applications_grafana_external_port }}:3000
     user: 1000:1000
     environment:
-      - GF_SECURITY_ADMIN_USER=admin
-      - GF_SECURITY_ADMIN_PASSWORD=admin
+      - GF_SECURITY_ADMIN_USER={{ applications_grafana_admin_user }}
+      - GF_SECURITY_ADMIN_PASSWORD={{ applications_grafana_admin_password }}
       - GF_INSTALL_PLUGINS=
     volumes:
-      - /opt/applications/grafana:/var/lib/grafana
+      - {{ applications_data_directory }}/grafana:/var/lib/grafana
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.app.rule=Host(`{{ applications_grafana_subdomain }}.{{ applications_domain }}`)"
+      - "traefik.http.routers.app.entrypoints=websecure"
+      - "traefik.http.routers.app.tls.certresolver=customresolver"
     depends_on:
       - prometheus
     networks:
@@ -62,17 +66,17 @@ services:
     restart: always
 
   prometheus:
-    image: prom/prometheus:v2.36.2
+    image: prom/prometheus:{{ applications_prometheus_image_version }}
+    ports:
+      - {{ applications_prometheus_external_port }}:9090
     volumes:
-      - ./prometheus/:/etc/prometheus/
-      - prometheus_data:/prometheus
+      - {{ applications_data_directory }}/prometheus/config:/etc/prometheus/
+      - {{ applications_data_directory }}/prometheus/data:/prometheus
     command:
       - "--config.file=/etc/prometheus/prometheus.yml"
       - "--storage.tsdb.path=/prometheus"
       - "--web.console.libraries=/usr/share/prometheus/console_libraries"
       - "--web.console.templates=/usr/share/prometheus/consoles"
-    ports:
-      - 9090:9090
     links:
       - cadvisor:cadvisor
       - alertmanager:alertmanager
@@ -83,9 +87,9 @@ services:
     restart: always
 
   node-exporter:
-    image: quay.io/prometheus/node-exporter:latest
+    image: quay.io/prometheus/node-exporter:{{ applications_node_exporter_image_version }}
     ports:
-      - 9100:9100
+      - {{ applications_node_exporter_external_port }}:9100
     command:
       - "--path.rootfs=/host"
       - "--path.procfs=/host/proc"
@@ -101,28 +105,15 @@ services:
       - internal
     restart: always
 
-  alertmanager:
-    image: prom/alertmanager
-    ports:
-      - 9093:9093
-    command:
-      - "--config.file=/etc/alertmanager/config.yml"
-      - "--storage.path=/alertmanager"
-    volumes:
-      - ./alertmanager/:/etc/alertmanager/
-    networks:
-      - internal
-    restart: always
-
   cadvisor:
-    image: gcr.io/cadvisor/cadvisor
+    image: gcr.io/cadvisor/cadvisor:{{ applications_cadvisor_image_version }}
+    ports:
+      - {{ applications_cadvisor_external_port }}:8080
     volumes:
       - /:/rootfs:ro
       - /var/run:/var/run:rw
       - /sys:/sys:ro
       - /var/lib/docker/:/var/lib/docker:ro
-    ports:
-      - 8080:8080
     networks:
       - internal
     restart: always
