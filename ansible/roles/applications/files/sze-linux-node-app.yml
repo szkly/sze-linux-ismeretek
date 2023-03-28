@@ -1,0 +1,12 @@
+---
+version: "3"
+services:
+  sze-linux-node-app:
+    image: ghcr.io/szkly/sze-linux-node-app:1.0.1
+    container_name: sze-linux-node-app
+    ports:
+      - 3000:3000
+    user: 1000:1000
+    networks:
+      - srv
+    restart: unless-stopped
