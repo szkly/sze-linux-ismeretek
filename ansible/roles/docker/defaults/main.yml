@@ -1,2 +1,14 @@
 ---
-# defaults file for docker
+docker_packages_prequisites:
+  - "ca-certificates"
+  - "curl"
+  - "gnupg"
+
+docker_keyrings_dir: "/etc/apt/keyrings"
+
+docker_packages_core:
+  - "docker-ce"
+  - "docker-ce-cli"
+  - "containerd.io"
+  - "docker-buildx-plugin"
+  - "docker-compose-plugin"
