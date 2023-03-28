@@ -1,1 +1,4 @@
 ---
+containers_reverse_proxy: true
+containers_app: true
+containers_monitoring: true
