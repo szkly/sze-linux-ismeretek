@@ -1,0 +1,8 @@
+---
+- name: Add mgmt user to docker group
+  ansible.builtin.user:
+    name: mgmt
+    groups:
+      - docker
+    append: true
+    
