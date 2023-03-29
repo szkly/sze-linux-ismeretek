@@ -1,0 +1,11 @@
+---
+- name: Create required users
+  ansible.builtin.user:
+    name: "{{ item.name }}"
+    groups: "{{ item.groups }}"
+  loop: "{{ core_required_users }}"
+
+- name: Associate users with their SSH keys
+  ansible.posix.authorized_key:
+    user: "{{ item.name }}"
+    key: "files/{{ item.authorized_key }}"
