@@ -49,8 +49,8 @@ services:
       - {{ applications_grafana_external_port }}:3000
     user: 1000:1000
     environment:
-      - GF_SECURITY_ADMIN_USER={{ applications_grafana_admin_user }}
-      - GF_SECURITY_ADMIN_PASSWORD={{ applications_grafana_admin_password }}
+      - GF_SECURITY_ADMIN_USER=${GRAFANA_ADMIN_USER}
+      - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_ADMIN_PASS}
       - GF_INSTALL_PLUGINS=
     volumes:
       - {{ applications_data_directory }}/grafana:/var/lib/grafana
