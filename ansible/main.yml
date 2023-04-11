@@ -1,0 +1,7 @@
+- name: Setup node
+  hosts: all
+  gather_facts: false
+  roles:
+    - core
+    - docker
+    - applications

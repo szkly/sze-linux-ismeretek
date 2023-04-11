@@ -1,0 +1,3 @@
+---
+- name: System upgrade
+  ansible.builtin.import_tasks: upgrade.yml

@@ -1,0 +1,5 @@
+---
+- name: Perform upgrade using APT
+  ansible.builtin.apt:
+    update_cache: true
+    upgrade: full
