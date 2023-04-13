@@ -6,7 +6,7 @@ resource "digitalocean_droplet" "do_droplet_web" {
 }
 
 resource "cloudflare_record" "cloudflare_do_droplet_record" {
-  domain = "${var.cloudflare_domain}"
+  domain = var.cloudflare_domain
   name   = "*"
   value  = data.do_droplet_web.ipv4_address
   type   = "A"

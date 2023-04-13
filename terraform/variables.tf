@@ -1,12 +1,12 @@
 variable "do_token" {
   description = "API token used by DigitalOcean"
-  type = string
+  type        = string
 }
 
 variable "do_region" {
   description = "Region where the resources are created"
-  type = string
-  default = "fra1"
+  type        = string
+  default     = "fra1"
 }
 
 variable "cloudflare_email" {
@@ -18,6 +18,6 @@ variable "cloudflare_api_key" {
 }
 
 variable "cloudflare_domain" {
-  type = string
+  type    = string
   default = "example.com"
 }
