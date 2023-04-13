@@ -6,9 +6,9 @@ resource "digitalocean_droplet" "do_droplet_web" {
 }
 
 resource "cloudflare_record" "cloudflare_do_droplet_record" {
-  domain = var.cloudflare_domain
+  zone_id = var.cloudflare_zone_id
   name   = "*"
-  value  = data.do_droplet_web.ipv4_address
+  value  = digitalocean_droplet.do_droplet_web.ipv4_address
   type   = "A"
   ttl    = 60
 }
