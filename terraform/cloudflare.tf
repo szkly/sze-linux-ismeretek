@@ -12,13 +12,13 @@ provider "cloudflare" {
 }
 
 variable "cloudflare_domain" {
+  type = string
   default = "example.com"
 }
 
-resource "cloudflare_record" "www" {
+resource "cloudflare_record" "do_droplet" {
   domain  = "${var.cloudflare_domain}"
-  name    = "www"
+  name    = "*"
   value   = "203.0.113.10"
   type    = "A"
-  proxied = true
 }
