@@ -3,6 +3,12 @@ variable "do_token" {
   type = string
 }
 
+variable "do_region" {
+  description = "Region where the resources are created"
+  type = string
+  default = "fra1"
+}
+
 variable "cloudflare_email" {
   type = string
 }
