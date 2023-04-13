@@ -7,22 +7,9 @@ terraform {
   }
 }
 
-variable "cloudflare_email" {
-  type = string
-}
-
-variable "cloudflare_api_key" {
-  type = string
-}
-
 provider "cloudflare" {
   email = var.cloudflare_email
   token = var.cloudflare_api_key
-}
-
-variable "cloudflare_domain" {
-  type = string
-  default = "example.com"
 }
 
 resource "cloudflare_record" "do_droplet" {
