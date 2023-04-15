@@ -1,0 +1,8 @@
+#cloud-config
+users:
+  - name: mgmt
+    shell: /bin/bash
+    sudo: ["ALL=(ALL) NOPASSWD:ALL"]
+    ssh_import_id:
+      - gh:szkly
+disable_root: true
