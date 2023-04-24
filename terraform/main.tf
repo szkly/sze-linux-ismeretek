@@ -3,6 +3,7 @@ resource "digitalocean_droplet" "do_droplet_web" {
   name   = "sze-linux-web"
   region = var.do_region
   size   = "g-2vcpu-8gb"
+  user_data = file("${path.module}/cloud-config.yml")
 }
 
 resource "cloudflare_record" "cloudflare_do_droplet_record" {

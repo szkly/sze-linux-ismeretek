@@ -1,8 +1,14 @@
 #cloud-config
 users:
   - name: mgmt
+    groups:
+      - sudo
     shell: /bin/bash
-    sudo: ["ALL=(ALL) NOPASSWD:ALL"]
-    ssh_import_id:
-      - gh:szkly
-disable_root: true
+    sudo: "ALL=(ALL) NOPASSWD:ALL"
+    ssh-authorized-keys:
+      - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIDHOoJjex/0hlhO4kqA7sHam/Yj5oieW1GqazZBqxzit mgmt@do-node
+
+runcmd:
+  - sed -i -e '/^PermitRootLogin/s/^.*$/PermitRootLogin no/' /etc/ssh/sshd_config
+  - sed -i -e '/^PasswordAuthentication/s/^.*$/PasswordAuthentication no/' /etc/ssh/sshd_config
+  - sed -i '$a AllowUsers mgmt' /etc/ssh/sshd_config
