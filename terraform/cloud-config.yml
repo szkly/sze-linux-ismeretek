@@ -8,7 +8,10 @@ users:
     ssh-authorized-keys:
       - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIDHOoJjex/0hlhO4kqA7sHam/Yj5oieW1GqazZBqxzit mgmt@do-node
 
-runcmd:
-  - sed -i -e '/^PermitRootLogin/s/^.*$/PermitRootLogin no/' /etc/ssh/sshd_config
-  - sed -i -e '/^PasswordAuthentication/s/^.*$/PasswordAuthentication no/' /etc/ssh/sshd_config
-  - sed -i '$a AllowUsers mgmt' /etc/ssh/sshd_config
+ssh_pwauth: false
+chpasswd:
+  expire: false
+  users:
+    - name: root
+      password: $6$rounds=4096$osR0C8nHA7z$UuGDFflhoWjVHikZ6ygcLeqmGQXA9SXmSabwjchNe.HY2PCym0pzp74QxWeWTtutE8e8qmPwY5nUHH6rdyr51/
+
