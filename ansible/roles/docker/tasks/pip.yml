@@ -1,0 +1,6 @@
+---
+- name: Install Docker SDK for Python
+  ansible.builtin.pip:
+    name: "docker"
+    version: "6.0.1"
+    state: present
