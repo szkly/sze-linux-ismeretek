@@ -7,11 +7,14 @@
 
 - name: Ensure Prometheus data directory exists
   ansible.builtin.file:
-    path: "{{ applications_data_directory }}/prometheus"
+    path: "{{ item }}"
     owner: "{{ ansible_user }}"
     group: "{{ ansible_user }}"
     mode: 0777
     state: directory
+  loop:
+    - "{{ applications_data_directory }}/prometheus"
+    - "{{ applications_data_directory }}/prometheus/data"
 
 - name: Copy Prometheus config
   ansible.builtin.copy:
