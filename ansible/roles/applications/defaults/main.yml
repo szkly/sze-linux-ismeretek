@@ -7,7 +7,6 @@ applications_data_directory: "/opt/appdata"
 
 applications_domain: "example.com"
 
-
 applications_traefik_image_version: "v2.9"
 applications_traefik_external_port_webui: 8080
 applications_traefik_acme_email: "john.doe@example.com"

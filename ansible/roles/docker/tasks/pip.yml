@@ -5,9 +5,9 @@
     update_cache: true
     state: present
 
-
-- name: Install Docker SDK for Python
+- name: Install Docker-related modules
   ansible.builtin.pip:
-    name: "docker"
-    version: "6.0.1"
+    name:
+      - "docker==6.0.1"
+      - "docker-compose==1.29.2"
     state: present
