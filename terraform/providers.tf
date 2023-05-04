@@ -8,6 +8,10 @@ terraform {
       source  = "cloudflare/cloudflare"
       version = "4.3.0"
     }
+    ansible = {
+      source  = "ansible/ansible"
+      version = "~> 1.0.0"
+    }
   }
 }
 provider "digitalocean" {
