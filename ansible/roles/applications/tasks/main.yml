@@ -4,3 +4,6 @@
 
 - name: Generate and run 'applications' stack
   ansible.builtin.import_tasks: docker.yml
+
+- name: Set up Grafana
+  ansible.builtin.import_tasks: grafana.yml

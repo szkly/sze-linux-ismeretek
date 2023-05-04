@@ -1,0 +1,21 @@
+---
+- name: Add Prometheus as a data source
+  community.grafana.grafana_datasource:
+    name: Prometheus
+    grafana_url: http://localhost:8000/
+    grafana_user: "{{ applications_grafana_admin_user }}"
+    grafana_password: "{{ applications_grafana_admin_password }}"
+    ds_type: prometheus
+    ds_url: http://prometheus:9090
+    access: proxy
+    is_default: true
+    tls_skip_verify: true
+
+- name: Import Node Exporter dashboard
+  community.grafana.grafana_dashboard:
+    grafana_url: http://localhost:8000/
+    grafana_user: "{{ applications_grafana_admin_user }}"
+    grafana_password: "{{ applications_grafana_admin_password }}"
+    dashboard_id: 1860
+    dashboard_revision: 31
+    overwrite: true
