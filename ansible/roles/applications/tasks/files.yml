@@ -10,7 +10,7 @@
     path: "{{ item }}"
     owner: "{{ ansible_user }}"
     group: "{{ ansible_user }}"
-    mode: 0777
+    mode: 0775
     state: directory
   loop:
     - "{{ applications_data_directory }}/prometheus"
@@ -22,13 +22,13 @@
     dest: "{{ applications_data_directory }}/prometheus/prometheus.yml"
     owner: "{{ ansible_user }}"
     group: "{{ ansible_user }}"
-    mode: 0777
+    mode: 0775
 
 - name: Create Grafana directory
   ansible.builtin.file:
     path: "{{ applications_data_directory }}/grafana"
     owner: "{{ ansible_user }}"
     group: "{{ ansible_user }}"
-    mode: 0777
+    mode: 0775
     recurse: true
     state: directory
