@@ -18,8 +18,25 @@ resource "ansible_host" "do_droplet_web" {
   name = "sze-linux-web"
 
   variables = {
+    ansible_host                 = digitalocean_droplet.do_droplet_web.ipv4_address
     ansible_user                 = "mgmt"
     ansible_ssh_private_key_file = "~/.ssh/id_sze-linux_mgmt_ed25519"
     ansible_python_interpreter   = "/usr/bin/python3"
+  }
+}
+
+resource "null_resource" "configuration" {
+  provisioner "remote-exec" {
+    connection {
+      host        = digitalocean_droplet.do_droplet_web.ipv4_address
+      user        = "mgmt"
+      private_key = file("~/.ssh/id_sze-linux_mgmt_ed25519")
+    }
+
+    inline = ["cloud-init status --wait > /dev/null 2>&1", "echo 'Ready to go!'"]
+  }
+
+  provisioner "local-exec" {
+    command = "ANSIBLE_FORCE_COLOR=1 ANSIBLE_CONFIG='../ansible/ansible.cfg' ansible-playbook ../ansible/main.yml"
   }
 }
