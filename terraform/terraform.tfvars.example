@@ -1,0 +1,6 @@
+do_token             = ""
+do_region            = ""
+cloudflare_api_token = ""
+cloudflare_zone_id   = ""
+cloudflare_domain    = ""
+mgmt_ssh_key_path    = ""

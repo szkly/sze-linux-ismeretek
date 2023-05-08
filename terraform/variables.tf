@@ -21,3 +21,8 @@ variable "cloudflare_domain" {
   type    = string
   default = "example.com"
 }
+
+variable "mgmt_ssh_key_path" {
+  type    = string
+  default = "~/.ssh/id_sze-linux_mgmt_ed25519"
+}
