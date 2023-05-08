@@ -1,4 +1,16 @@
 ---
+- name: Check if Grafana API is available
+  ansible.builtin.uri:
+    url: http://localhost:8000/api/health
+    return_content: true
+    validate_certs: false
+    status_code:
+      - 200
+  retries: 5
+  delay: 5
+  until: health_check_result.status == 200
+  register: health_check_result
+
 - name: Add Prometheus as a data source
   community.grafana.grafana_datasource:
     name: Prometheus
@@ -18,4 +30,13 @@
     grafana_password: "{{ applications_grafana_admin_password }}"
     dashboard_id: 1860
     dashboard_revision: 31
+    overwrite: true
+
+- name: Import Docker Container Metrics dashboard
+  community.grafana.grafana_dashboard:
+    grafana_url: http://localhost:8000/
+    grafana_user: "{{ applications_grafana_admin_user }}"
+    grafana_password: "{{ applications_grafana_admin_password }}"
+    dashboard_id: 11600
+    dashboard_revision: 1
     overwrite: true
