@@ -1,6 +1,7 @@
 version: "3"
 services:
   {% if applications_traefik %}
+  {% filter indent(width=4) %}
   traefik:
     image: traefik:{{ applications_traefik_image_version }}
     container_name: traefik
@@ -22,32 +23,36 @@ services:
       - public
       - internal
     restart: always
+  {% endfilter %}
   {% endif %}
 
   {% if applications_node_app %}
+  {% filter indent(width=4) %}
   sze-linux-node-app:
     image: ghcr.io/szkly/sze-linux-node-app:{{ applications_node_app_image_version }}
     container_name: sze-linux-node-app
     ports:
       - {{ applications_node_app_external_port }}:3000
-    user: 1000:1000
+    user: "1000:1000"
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.app.rule=Host(`{{ applications_node_app_subdomain }}.{{ applications_domain }}`)"
-      - "traefik.http.routers.app.entrypoints=websecure"
-      - "traefik.http.routers.app.tls.certresolver=customresolver"
+      - "traefik.http.routers.sze-linux-node-app.rule=Host(`{{ applications_node_app_subdomain }}.{{ applications_domain }}`)"
+      - "traefik.http.routers.sze-linux-node-app.entrypoints=websecure"
+      - "traefik.http.routers.sze-linux-node-app.tls.certresolver=customresolver"
     networks:
       - public
     restart: unless-stopped
+  {% endfilter %}
   {% endif %}
 
   {% if applications_monitoring_stack %}
+  {% filter indent(width=4) %}
   grafana:
-    image: grafana/grafana:{{ applications_grafana_image_version }}
+    image: grafana/grafana-oss:{{ applications_grafana_image_version }}
     container_name: grafana-server
     ports:
       - {{ applications_grafana_external_port }}:3000
-    user: 1000:1000
+    user: "1000:0"
     environment:
       - GF_SECURITY_ADMIN_USER=${GRAFANA_ADMIN_USER}
       - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_ADMIN_PASS}
@@ -56,21 +61,24 @@ services:
       - {{ applications_data_directory }}/grafana:/var/lib/grafana
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.app.rule=Host(`{{ applications_grafana_subdomain }}.{{ applications_domain }}`)"
-      - "traefik.http.routers.app.entrypoints=websecure"
-      - "traefik.http.routers.app.tls.certresolver=customresolver"
+      - "traefik.http.routers.grafana.rule=Host(`{{ applications_grafana_subdomain }}.{{ applications_domain }}`)"
+      - "traefik.http.routers.grafana.entrypoints=websecure"
+      - "traefik.http.routers.grafana.tls.certresolver=customresolver"
     depends_on:
       - prometheus
     networks:
       - public
+      - internal
     restart: always
 
   prometheus:
     image: prom/prometheus:{{ applications_prometheus_image_version }}
+    container_name: prometheus
     ports:
       - {{ applications_prometheus_external_port }}:9090
+    user: "1000:1000"
     volumes:
-      - {{ applications_data_directory }}/prometheus/config:/etc/prometheus/
+      - {{ applications_data_directory }}/prometheus:/etc/prometheus/
       - {{ applications_data_directory }}/prometheus/data:/prometheus
     command:
       - "--config.file=/etc/prometheus/prometheus.yml"
@@ -87,6 +95,7 @@ services:
 
   node-exporter:
     image: quay.io/prometheus/node-exporter:{{ applications_node_exporter_image_version }}
+    container_name: node_exporter
     ports:
       - {{ applications_node_exporter_external_port }}:9100
     command:
@@ -106,6 +115,7 @@ services:
 
   cadvisor:
     image: gcr.io/cadvisor/cadvisor:{{ applications_cadvisor_image_version }}
+    container_name: cadvisor
     ports:
       - {{ applications_cadvisor_external_port }}:8080
     volumes:
@@ -116,4 +126,9 @@ services:
     networks:
       - internal
     restart: always
+  {% endfilter %}
   {% endif %}
+
+networks:
+  public:
+  internal:

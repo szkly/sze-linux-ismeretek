@@ -1,3 +1,9 @@
 ---
+- name: Create app data directories
+  ansible.builtin.import_tasks: files.yml
+
 - name: Generate and run 'applications' stack
   ansible.builtin.import_tasks: docker.yml
+
+- name: Set up Grafana
+  ansible.builtin.import_tasks: grafana.yml

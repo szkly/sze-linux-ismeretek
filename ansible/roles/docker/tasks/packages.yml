@@ -4,19 +4,21 @@
     name: "{{ docker_packages_prequisites }}"
     update_cache: true
 
-# - name: Create keyrings directory
-#   ansible.builtin.file:
-#     path: "{{ docker_keyrings_dir }}"
-#     mode: 0755
+- name: Create keyrings directory
+  ansible.builtin.file:
+    path: "{{ docker_keyrings_dir }}"
+    mode: 0755
 
 - name: Add the official Docker GPG key
   ansible.builtin.apt_key:
     url: "{{ docker_gpg_key_download_url }}"
+    keyring: "{{ docker_keyrings_dir }}/docker.gpg"
     state: present
 
 - name: Verify GPG key
   ansible.builtin.apt_key:
     id: "{{ docker_gpg_key_id }}"
+    keyring: "{{ docker_keyrings_dir }}/docker.gpg"
     state: present
 
 - name: Add Docker repo

@@ -1,6 +1,8 @@
-- name: Setup node
+---
+- name: Setup Node
   hosts: all
-  gather_facts: false
+  become: true
+  gather_facts: true
   roles:
     - core
     - docker

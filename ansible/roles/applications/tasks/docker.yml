@@ -1,22 +1,22 @@
 ---
 - name: Create 'applications' directory
   ansible.builtin.file:
-    path: "{{ lookup('env', 'HOME') }}/applications"
+    path: "/home/{{ ansible_user }}/applications"
     mode: 0644
     state: directory
 
 - name: Generate .env file for sensitive variables
   ansible.builtin.template:
     src: ".env.j2"
-    dest: "{{ lookup('env', 'HOME') }}/applications/.env"
+    dest: "/home/{{ ansible_user }}/applications/.env"
     mode: 0644
 
 - name: Generate Docker Compose manifest from template
   ansible.builtin.template:
     src: docker-compose.yml.j2
-    dest: "{{ lookup('env', 'HOME') }}/applications/docker-compose.yml"
+    dest: "/home/{{ ansible_user }}/applications/docker-compose.yml"
     mode: 0644
 
 - name: Start 'applications' stack
   community.docker.docker_compose:
-    project_src: "{{ lookup('env', 'HOME') }}/applications"
+    project_src: "/home/{{ ansible_user }}/applications"

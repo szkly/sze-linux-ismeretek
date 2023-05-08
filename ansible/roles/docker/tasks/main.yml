@@ -2,5 +2,8 @@
 - name: Set up Docker Engine
   ansible.builtin.import_tasks: packages.yml
 
+- name: Install SDK
+  ansible.builtin.import_tasks: pip.yml
+
 - name: Enable managing Docker containers via Ansible
   ansible.builtin.import_tasks: users.yml
